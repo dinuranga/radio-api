@@ -40,7 +40,7 @@ async function fetchData() {
   }
 }
 
-app.get("/api/channels", async (req, res) => {
+app.get("/api", async (req, res) => {
   try {
     const channels = await fetchData();
     res.status(200).json(channels);
