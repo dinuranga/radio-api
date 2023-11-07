@@ -40,10 +40,39 @@ async function fetchData() {
   }
 }
 
+app.get("/", (req, res) => {
+  res
+    .status(200)
+    .send(
+      "<h2>Radio API</h2><p>End-Point : <code><a href='/api'>/api</a></code></p>"
+    );
+});
+
 app.get("/api", async (req, res) => {
   try {
-    const channels = await fetchData();
+    channels = await fetchData();
     res.status(200).json(channels);
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    res.status(500).json({ error: "An error occurred." });
+  }
+});
+
+app.get("/api/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10); // Parse the 'id' parameter as an integer
+
+    try {
+      channels = await fetchData();
+      if (!isNaN(id) && id < channels.length) {
+        res.status(200).json(channels[id]);
+      } else {
+        res.status(404).json({ error: "No records found !" });
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).json({ error: "An error occurred." });
+    }
   } catch (error) {
     console.error("Error fetching data:", error);
     res.status(500).json({ error: "An error occurred." });
